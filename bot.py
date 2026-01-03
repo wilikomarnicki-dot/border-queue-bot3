@@ -1,33 +1,46 @@
-
+import os
 import time
+import random
 from telegram import Bot
 
-# 🔴 ВСТАВ СЮДИ СВІЙ TOKEN
-TOKEN = 8434689670:AAH0SL6xOqeNK-LbWguXpgyixRZnFSRuPYQ
-CHAT_ID = None  # заповниться автоматично
+TOKEN = os.getenv("BOT_TOKEN")
+
+if not TOKEN:
+    print("❌ BOT_TOKEN not found. Check GitHub Secrets.")
+    exit(1)
 
 bot = Bot(token=TOKEN)
 
+CHAT_ID = None
 LAST_QUEUE = None
 
+
 def get_queue_length():
-    """
-    🔧 ТУТ ПОТІМ МОЖНА ПІДКЛЮЧИТИ РЕАЛЬНЕ API
-    Поки що — приклад (рандом / заглушка)
-    """
-    import random
     return random.randint(0, 1200)
 
-def main():
-    global LAST_QUEUE, CHAT_ID
 
+def init_chat_id():
+    global CHAT_ID
     updates = bot.get_updates()
-    if updates:
-        CHAT_ID = updates[-1].message.chat_id
+    if not updates:
+        print("❗ No messages yet. Send 'hi' to the bot in Telegram.")
+        return False
 
-    if CHAT_ID is None:
-        print("❗ Напиши боту будь-яке повідомлення")
+    CHAT_ID = updates[-1].message.chat_id
+    print(f"✅ CHAT_ID detected: {CHAT_ID}")
+    return True
+
+
+def main():
+    global LAST_QUEUE
+
+    if not init_chat_id():
         return
+
+    bot.send_message(
+        chat_id=CHAT_ID,
+        text="🤖 Бот успішно запущений через GitHub Actions"
+    )
 
     while True:
         queue = get_queue_length()
@@ -38,11 +51,16 @@ def main():
         if queue > LAST_QUEUE + 50:
             bot.send_message(
                 chat_id=CHAT_ID,
-                text=f"🚛 Черга зростає!\nБуло: {LAST_QUEUE}\nСтало: {queue}"
+                text=(
+                    "🚛 Черга зростає!\n"
+                    f"Було: {LAST_QUEUE}\n"
+                    f"Стало: {queue}"
+                )
             )
             LAST_QUEUE = queue
 
-        time.sleep(300)  # перевірка кожні 5 хв
+        time.sleep(300)
+
 
 if name == "__main__":
-    
+    main()
