@@ -6,7 +6,7 @@ from telegram import Bot
 TOKEN = os.getenv("BOT_TOKEN")
 
 if not TOKEN:
-    print("❌ BOT_TOKEN not found. Check GitHub Secrets.")
+    print("BOT_TOKEN is missing")
     exit(1)
 
 bot = Bot(token=TOKEN)
@@ -23,11 +23,11 @@ def init_chat_id():
     global CHAT_ID
     updates = bot.get_updates()
     if not updates:
-        print("❗ No messages yet. Send 'hi' to the bot in Telegram.")
+        print("No messages yet. Send 'hi' to the bot.")
         return False
 
     CHAT_ID = updates[-1].message.chat_id
-    print(f"✅ CHAT_ID detected: {CHAT_ID}")
+    print(f"CHAT_ID = {CHAT_ID}")
     return True
 
 
@@ -39,7 +39,7 @@ def main():
 
     bot.send_message(
         chat_id=CHAT_ID,
-        text="🤖 Бот успішно запущений через GitHub Actions"
+        text="🤖 Бот запущено і він працює"
     )
 
     while True:
@@ -51,11 +51,7 @@ def main():
         if queue > LAST_QUEUE + 50:
             bot.send_message(
                 chat_id=CHAT_ID,
-                text=(
-                    "🚛 Черга зростає!\n"
-                    f"Було: {LAST_QUEUE}\n"
-                    f"Стало: {queue}"
-                )
+                text=f"🚛 Черга зростає!\nБуло: {LAST_QUEUE}\nСтало: {queue}"
             )
             LAST_QUEUE = queue
 
