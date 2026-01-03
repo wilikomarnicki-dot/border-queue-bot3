@@ -3,7 +3,7 @@ import time
 from telegram import Bot
 
 # 🔴 ВСТАВ СЮДИ СВІЙ TOKEN
-TOKEN = "PASTE_YOUR_BOT_TOKEN_HERE"
+TOKEN = 8434689670:AAH0SL6xOqeNK-LbWguXpgyixRZnFSRuPYQ
 CHAT_ID = None  # заповниться автоматично
 
 bot = Bot(token=TOKEN)
