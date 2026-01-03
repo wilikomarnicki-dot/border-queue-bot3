@@ -1,4 +1,4 @@
-import requests
+
 import time
 from telegram import Bot
 
@@ -45,4 +45,4 @@ def main():
         time.sleep(300)  # перевірка кожні 5 хв
 
 if name == "__main__":
-    main()
+    
